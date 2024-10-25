@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "0kBrtRZh16o=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Sudarshan\\source\\repos\\Ella Rose Assignmnet\\Ella Rose Assignmnet\\Ella Rose Assignmnet.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Sudarshan\\.nuget\\packages\\microsoft.reportingservices.reportviewercontrol.winforms\\150.1652.0\\microsoft.reportingservices.reportviewercontrol.winforms.150.1652.0.nupkg.sha512",
+    "C:\\Users\\Sudarshan\\.nuget\\packages\\microsoft.sqlserver.types\\14.0.314.76\\microsoft.sqlserver.types.14.0.314.76.nupkg.sha512",
+    "C:\\Users\\Sudarshan\\.nuget\\packages\\system.configuration.configurationmanager\\8.0.1\\system.configuration.configurationmanager.8.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

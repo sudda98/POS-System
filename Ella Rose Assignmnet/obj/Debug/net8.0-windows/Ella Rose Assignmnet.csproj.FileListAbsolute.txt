@@ -1,0 +1,17 @@
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\bin\Debug\net8.0-windows\Ella Rose Assignmnet.exe
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\bin\Debug\net8.0-windows\Ella Rose Assignmnet.deps.json
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\bin\Debug\net8.0-windows\Ella Rose Assignmnet.runtimeconfig.json
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\bin\Debug\net8.0-windows\Ella Rose Assignmnet.dll
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\bin\Debug\net8.0-windows\Ella Rose Assignmnet.pdb
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net8.0-windows\Ella Rose Assignmnet.csproj.GenerateResource.cache
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net8.0-windows\Ella Rose Assignmnet.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net8.0-windows\Ella Rose Assignmnet.AssemblyInfoInputs.cache
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net8.0-windows\Ella Rose Assignmnet.AssemblyInfo.cs
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net8.0-windows\Ella Rose Assignmnet.csproj.CoreCompileInputs.cache
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net8.0-windows\Ella Rose Assignmnet.dll
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net8.0-windows\refint\Ella Rose Assignmnet.dll
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net8.0-windows\Ella Rose Assignmnet.pdb
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net8.0-windows\Ella Rose Assignmnet.genruntimeconfig.cache
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net8.0-windows\ref\Ella Rose Assignmnet.dll
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net8.0-windows\Ella_Rose_Assignment.Form1.resources
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net8.0-windows\Ella Rose Assignmnet.csproj.AssemblyReference.cache
