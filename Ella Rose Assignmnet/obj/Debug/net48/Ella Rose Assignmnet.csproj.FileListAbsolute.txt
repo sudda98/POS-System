@@ -58,3 +58,4 @@ C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\De
 C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net48\Ella Rose Assignmnet.exe
 C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net48\Ella Rose Assignmnet.pdb
 C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\bin\Debug\net48\System.Configuration.ConfigurationManager.dll
+C:\Users\Sudarshan\source\repos\Ella Rose Assignmnet\Ella Rose Assignmnet\obj\Debug\net48\Ella Rose Assignmnet.sourcelink.json

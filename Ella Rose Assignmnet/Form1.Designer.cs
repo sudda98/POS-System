@@ -1,10 +1,21 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing; 
+using System.Windows.Forms;
 
 namespace Ella_Rose_Assignment
 {
     partial class Form1
     {
         private System.ComponentModel.IContainer components = null;
+        private Microsoft.Reporting.WinForms.ReportViewer reportViewer;
+        private System.Windows.Forms.DateTimePicker dtpFromDate;
+        private System.Windows.Forms.DateTimePicker dtpToDate;
+        private System.Windows.Forms.Button btnFilter;
+        private System.Windows.Forms.Button btnExport;
+        private System.Windows.Forms.Button btnPreview;
+        private System.Windows.Forms.Label lblFromDate;
+        private System.Windows.Forms.Label lblToDate;
+        private System.Windows.Forms.Label lblTotalAmount;
+        private System.Windows.Forms.DataGridView dataGridViewReports;
 
         protected override void Dispose(bool disposing)
         {
@@ -17,121 +28,93 @@ namespace Ella_Rose_Assignment
 
         private void InitializeComponent()
         {
-            this.dgvVoidReport = new System.Windows.Forms.DataGridView();
+            this.components = new System.ComponentModel.Container();
+            this.reportViewer = new Microsoft.Reporting.WinForms.ReportViewer();
             this.dtpFromDate = new System.Windows.Forms.DateTimePicker();
             this.dtpToDate = new System.Windows.Forms.DateTimePicker();
             this.btnFilter = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
-            this.btnPrint = new System.Windows.Forms.Button();
+            this.btnPreview = new System.Windows.Forms.Button();
+            this.lblFromDate = new System.Windows.Forms.Label();
+            this.lblToDate = new System.Windows.Forms.Label();
             this.lblTotalAmount = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvVoidReport)).BeginInit();
+            this.dataGridViewReports = new System.Windows.Forms.DataGridView();
+
             this.SuspendLayout();
+            this.ClientSize = new System.Drawing.Size(850, 680);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.BackColor = Color.WhiteSmoke;
+            this.Name = "Form1";
+            this.Text = "Report Viewer";
 
-           
-            this.dgvVoidReport.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.dgvVoidReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvVoidReport.Location = new System.Drawing.Point(12, 80);
-            this.dgvVoidReport.Name = "dgvVoidReport";
-            this.dgvVoidReport.Size = new System.Drawing.Size(760, 368);
-            this.dgvVoidReport.TabIndex = 0;
-            this.dgvVoidReport.BorderStyle = BorderStyle.None; 
-            this.dgvVoidReport.EnableHeadersVisualStyles = false; 
-            this.dgvVoidReport.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.LightSkyBlue; 
-            this.dgvVoidReport.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.White; 
+            this.reportViewer.LocalReport.ReportEmbeddedResource = "Ella_Rose_Assignment.Report1.rdlc";
+            this.reportViewer.Location = new System.Drawing.Point(20, 15);
+            this.reportViewer.Size = new System.Drawing.Size(800, 320);
+            this.reportViewer.TabIndex = 0;
 
- 
-            this.dtpFromDate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dtpFromDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpFromDate.Location = new System.Drawing.Point(12, 12);
+            this.dtpFromDate.Location = new System.Drawing.Point(20, 355);
             this.dtpFromDate.Name = "dtpFromDate";
-            this.dtpFromDate.Size = new System.Drawing.Size(200, 20);
+            this.dtpFromDate.Size = new System.Drawing.Size(200, 22);
             this.dtpFromDate.TabIndex = 1;
 
-          
-            this.dtpToDate.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.dtpToDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpToDate.Location = new System.Drawing.Point(218, 12);
+            this.dtpToDate.Location = new System.Drawing.Point(250, 355);
             this.dtpToDate.Name = "dtpToDate";
-            this.dtpToDate.Size = new System.Drawing.Size(200, 20);
+            this.dtpToDate.Size = new System.Drawing.Size(200, 22);
             this.dtpToDate.TabIndex = 2;
 
-            this.btnFilter.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnFilter.BackColor = System.Drawing.Color.LightSkyBlue;
-            this.btnFilter.FlatAppearance.BorderSize = 0;
-            this.btnFilter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFilter.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.btnFilter.ForeColor = System.Drawing.Color.White;
-            this.btnFilter.Location = new System.Drawing.Point(424, 10);
-            this.btnFilter.Name = "btnFilter";
-            this.btnFilter.Size = new System.Drawing.Size(75, 30);
-            this.btnFilter.TabIndex = 3;
-            this.btnFilter.Text = "Filter";
-            this.btnFilter.UseVisualStyleBackColor = false;
+            SetButtonStyle(btnFilter, "Filter", new Point(470, 350), Color.CornflowerBlue);
+            SetButtonStyle(btnExport, "Export", new Point(570, 350), Color.MediumSeaGreen);
+            SetButtonStyle(btnPreview, "Preview", new Point(670, 350), Color.Coral);
+
             this.btnFilter.Click += new System.EventHandler(this.BtnFilter_Click);
-
-          
-            this.btnExport.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnExport.BackColor = System.Drawing.Color.MediumSeaGreen;
-            this.btnExport.FlatAppearance.BorderSize = 0;
-            this.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExport.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.btnExport.ForeColor = System.Drawing.Color.White;
-            this.btnExport.Location = new System.Drawing.Point(505, 10);
-            this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(75, 30);
-            this.btnExport.TabIndex = 4;
-            this.btnExport.Text = "Export";
-            this.btnExport.UseVisualStyleBackColor = false;
             this.btnExport.Click += new System.EventHandler(this.BtnExport_Click);
+            this.btnPreview.Click += new System.EventHandler(this.BtnPreview_Click);
 
-           
-            this.btnPrint.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnPrint.BackColor = System.Drawing.Color.Coral;
-            this.btnPrint.FlatAppearance.BorderSize = 0;
-            this.btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPrint.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.btnPrint.ForeColor = System.Drawing.Color.White;
-            this.btnPrint.Location = new System.Drawing.Point(586, 10);
-            this.btnPrint.Name = "btnPrint";
-            this.btnPrint.Size = new System.Drawing.Size(75, 30);
-            this.btnPrint.TabIndex = 5;
-            this.btnPrint.Text = "Print";
-            this.btnPrint.UseVisualStyleBackColor = false;
-            this.btnPrint.Click += new System.EventHandler(this.BtnPrint_Click);
+            SetLabelStyle(lblFromDate, "From Date:", new Point(20, 335));
+            SetLabelStyle(lblToDate, "To Date:", new Point(250, 335));
+            SetLabelStyle(lblTotalAmount, "Total Amount:", new Point(20, 300));
 
-           
-            this.lblTotalAmount.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.lblTotalAmount.AutoSize = true;
-            this.lblTotalAmount.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblTotalAmount.Location = new System.Drawing.Point(12, 460);
-            this.lblTotalAmount.Name = "lblTotalAmount";
-            this.lblTotalAmount.Size = new System.Drawing.Size(0, 21);
-            this.lblTotalAmount.TabIndex = 6;
+            this.dataGridViewReports.Location = new System.Drawing.Point(20, 30);
+            this.dataGridViewReports.Size = new System.Drawing.Size(800, 260);
+            this.dataGridViewReports.BorderStyle = BorderStyle.FixedSingle;
+            this.dataGridViewReports.BackgroundColor = Color.White;
+            this.dataGridViewReports.TabIndex = 9;
 
-           
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 511);
-            this.Controls.Add(this.lblTotalAmount);
-            this.Controls.Add(this.btnPrint);
-            this.Controls.Add(this.btnExport);
-            this.Controls.Add(this.btnFilter);
-            this.Controls.Add(this.dtpToDate);
+            this.Controls.Add(this.reportViewer);
             this.Controls.Add(this.dtpFromDate);
-            this.Controls.Add(this.dgvVoidReport);
-            this.Name = "Form1";
-            this.Text = "Void Report";
-            ((System.ComponentModel.ISupportInitialize)(this.dgvVoidReport)).EndInit();
+            this.Controls.Add(this.dtpToDate);
+            this.Controls.Add(this.btnFilter);
+            this.Controls.Add(this.btnExport);
+            this.Controls.Add(this.btnPreview);
+            this.Controls.Add(this.lblFromDate);
+            this.Controls.Add(this.lblToDate);
+            this.Controls.Add(this.lblTotalAmount);
+            this.Controls.Add(this.dataGridViewReports);
+
             this.ResumeLayout(false);
             this.PerformLayout();
         }
 
-        private System.Windows.Forms.DataGridView dgvVoidReport;
-        private System.Windows.Forms.DateTimePicker dtpFromDate;
-        private System.Windows.Forms.DateTimePicker dtpToDate;
-        private System.Windows.Forms.Button btnFilter;
-        private System.Windows.Forms.Button btnExport;
-        private System.Windows.Forms.Button btnPrint;
-        private System.Windows.Forms.Label lblTotalAmount;
+
+        private void SetButtonStyle(Button button, string text, Point location, Color color)
+        {
+            button.Text = text;
+            button.Location = location;
+            button.Size = new System.Drawing.Size(90, 30);
+            button.BackColor = color;
+            button.ForeColor = Color.White;
+            button.FlatStyle = FlatStyle.Flat;
+            button.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            button.TabIndex = 3;
+        }
+
+        private void SetLabelStyle(Label label, string text, Point location)
+        {
+            label.Text = text;
+            label.Location = location;
+            label.Font = new Font("Segoe UI", 9, FontStyle.Regular);
+            label.ForeColor = Color.Black;
+            label.AutoSize = true;
+        }
     }
 }

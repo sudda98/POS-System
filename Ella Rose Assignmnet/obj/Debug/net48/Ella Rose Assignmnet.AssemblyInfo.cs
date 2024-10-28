@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Ella Rose Assignmnet")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+56e421d91da8956c3429657c71b2943a407388b3")]
 [assembly: System.Reflection.AssemblyProductAttribute("Ella Rose Assignmnet")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Ella Rose Assignmnet")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

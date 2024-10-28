@@ -1,48 +1,62 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
-using System.Text;
+using System.Configuration;
 using System.Windows.Forms;
-using System.Drawing;
-using System.Drawing.Printing;
+using Microsoft.Reporting.WinForms;
+using System.IO;
 
 namespace Ella_Rose_Assignment
 {
     public partial class Form1 : Form
     {
-        private DataTable reportData;
+        private DataTable reportData = new DataTable();
         private string connectionString;
-        private PrintDocument printDocument;
-        private int rowIndex;
 
         public Form1()
         {
             InitializeComponent();
-            reportData = new DataTable();
-            connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ReportDB"].ConnectionString;
-            LoadReportData();
-
-            printDocument = new PrintDocument();
-            printDocument.PrintPage += new PrintPageEventHandler(PrintDocument_PrintPage);
+            connectionString = ConfigurationManager.ConnectionStrings["ReportDB"].ConnectionString;
+            LoadReportData(); 
+            reportViewer.Visible = false;
         }
 
         private void LoadReportData()
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(connectionString))
+                {
+                    MessageBox.Show("Connection string is not set.", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand("SELECT DateTime, Type, Employee, Staff, TillNo, Amount FROM VoidReports", connection))
+                    using (SqlCommand command = new SqlCommand("SELECT Id, DateTime, Type, Employee, Staff, TillNo, Amount FROM VoidReports", connection))
                     {
                         SqlDataAdapter adapter = new SqlDataAdapter(command);
+                        reportData.Clear();
                         adapter.Fill(reportData);
                     }
                 }
 
-                dgvVoidReport.DataSource = reportData;
+                if (reportData.Rows.Count == 0)
+                {
+                    MessageBox.Show("No data found in the report.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                dataGridViewReports.DataSource = reportData;
+                CustomizeDataGridView();
                 UpdateTotalAmount(reportData);
+
+                SetupReportViewer(); 
+            }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show($"SQL error loading report data: {sqlEx.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
@@ -50,125 +64,173 @@ namespace Ella_Rose_Assignment
             }
         }
 
+        private void CustomizeDataGridView()
+        {
+            if (dataGridViewReports == null) return;
+
+            dataGridViewReports.AutoGenerateColumns = false;
+            dataGridViewReports.Columns.Clear();
+
+            dataGridViewReports.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "ID", DataPropertyName = "Id", Width = 50 });
+            dataGridViewReports.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Date", DataPropertyName = "DateTime", Width = 100 });
+            dataGridViewReports.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Type", DataPropertyName = "Type", Width = 100 });
+            dataGridViewReports.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Employee", DataPropertyName = "Employee", Width = 100 });
+            dataGridViewReports.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Staff", DataPropertyName = "Staff", Width = 100 });
+            dataGridViewReports.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Till No", DataPropertyName = "TillNo", Width = 100 });
+
+            var amountColumn = new DataGridViewTextBoxColumn
+            {
+                HeaderText = "Amount",
+                DataPropertyName = "Amount",
+                Width = 100
+            };
+
+            dataGridViewReports.Columns.Add(amountColumn);
+
+            if (dataGridViewReports.Columns["Amount"] != null)
+            {
+                dataGridViewReports.Columns["Amount"].DefaultCellStyle.Format = "C2";
+            }
+        }
+
+        private void UpdateTotalAmount(DataTable dataTable)
+        {
+            decimal totalAmount = 0;
+            foreach (DataRow row in dataTable.Rows)
+            {
+                if (decimal.TryParse(row["Amount"].ToString(), out decimal amount))
+                {
+                    totalAmount += amount;
+                }
+            }
+            lblTotalAmount.Text = $"Total Amount: ${totalAmount:F2}";
+        }
+
+        private void SetupReportViewer()
+        {
+            try
+            {
+                if (reportData == null || reportData.Rows.Count == 0)
+                {
+                    MessageBox.Show("No data available for the report.", "Report Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                reportViewer.LocalReport.DataSources.Clear();
+                reportViewer.LocalReport.ReportEmbeddedResource = "Ella_Rose_Assignment.VoidReport.rdlc"; 
+                reportViewer.LocalReport.DataSources.Add(new ReportDataSource("Dataset1", reportData)); 
+                reportViewer.RefreshReport(); 
+                reportViewer.Visible = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error setting up report viewer: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void BtnFilter_Click(object sender, EventArgs e)
         {
-            DateTime fromDate = dtpFromDate.Value.Date;
-            DateTime toDate = dtpToDate.Value.Date.AddDays(1).AddTicks(-1);
-
-            if (fromDate > toDate)
+            if (dtpFromDate.Value > dtpToDate.Value)
             {
-                MessageBox.Show("The 'From' date cannot be later than the 'To' date.", "Date Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("From Date cannot be greater than To Date.", "Date Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            DataView filteredView = new DataView(reportData)
-            {
-                RowFilter = $"DateTime >= #{fromDate}# AND DateTime <= #{toDate}#"
-            };
+            DataView dv = reportData.DefaultView;
 
-            dgvVoidReport.DataSource = filteredView;
-            UpdateTotalAmount(filteredView.ToTable());
-        }
+            string filterExpression = $"DateTime >= #{dtpFromDate.Value}# AND DateTime <= #{dtpToDate.Value}#";
+            dv.RowFilter = filterExpression;
 
-        private void UpdateTotalAmount(DataTable data)
-        {
-            decimal total = 0;
-            foreach (DataRow row in data.Rows)
-            {
-                total += Convert.ToDecimal(row["Amount"]);
-            }
-            lblTotalAmount.Text = $"Total Amount: {total:C}";
+            dataGridViewReports.DataSource = dv;
+            UpdateTotalAmount(dv.ToTable());
         }
 
         private void BtnExport_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
+            try
             {
-                Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*",
-                Title = "Save an Export File"
-            };
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                try
+                if (reportData.Rows.Count == 0)
                 {
-                    StringBuilder csvContent = new StringBuilder();
-                    foreach (DataColumn column in reportData.Columns)
-                    {
-                        csvContent.Append(column.ColumnName + ",");
-                    }
-                    csvContent.Length--;
-                    csvContent.AppendLine();
-
-                    foreach (DataRow row in reportData.Rows)
-                    {
-                        for (int i = 0; i < reportData.Columns.Count; i++)
-                        {
-                            csvContent.Append(row[i].ToString() + ",");
-                        }
-                        csvContent.Length--;
-                        csvContent.AppendLine();
-                    }
-
-                    File.WriteAllText(saveFileDialog.FileName, csvContent.ToString());
-                    MessageBox.Show("Data exported successfully!", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error exporting data: {ex.Message}", "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-        private void BtnPrint_Click(object sender, EventArgs e)
-        {
-            PrintDialog printDialog = new PrintDialog
-            {
-                Document = printDocument
-            };
-
-            if (printDialog.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    printDocument.Print();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error printing document: {ex.Message}", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-        private void PrintDocument_PrintPage(object sender, PrintPageEventArgs e)
-        {
-            Font font = new Font("Arial", 10);
-            float lineHeight = font.GetHeight(e.Graphics) + 4;
-
-            e.Graphics.DrawString("Void Report", new Font("Arial", 12, FontStyle.Bold), Brushes.Black, e.MarginBounds.Left, e.MarginBounds.Top);
-
-            int columnCount = dgvVoidReport.Columns.Count;
-            for (int i = 0; i < columnCount; i++)
-            {
-                e.Graphics.DrawString(dgvVoidReport.Columns[i].HeaderText, font, Brushes.Black, e.MarginBounds.Left + (i * 100), e.MarginBounds.Top + lineHeight);
-            }
-
-            rowIndex = 0;
-            while (rowIndex < dgvVoidReport.Rows.Count)
-            {
-                DataGridViewRow row = dgvVoidReport.Rows[rowIndex];
-                for (int i = 0; i < columnCount; i++)
-                {
-                    e.Graphics.DrawString(row.Cells[i].Value?.ToString(), font, Brushes.Black, e.MarginBounds.Left + (i * 100), e.MarginBounds.Top + (lineHeight * (rowIndex + 2)));
-                }
-                rowIndex++;
-
-                if (e.MarginBounds.Top + (lineHeight * (rowIndex + 2)) > e.MarginBounds.Bottom)
-                {
-                    e.HasMorePages = true;
+                    MessageBox.Show("No data available to export.", "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
+
+                using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                {
+                    saveFileDialog.FileName = "VoidReportsExport";
+                    saveFileDialog.DefaultExt = "csv";
+                    saveFileDialog.Filter = "CSV files (*.csv)|*.csv";
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        using (StreamWriter writer = new StreamWriter(saveFileDialog.FileName))
+                        {
+                            for (int i = 0; i < reportData.Columns.Count; i++)
+                            {
+                                writer.Write(reportData.Columns[i]);
+                                if (i < reportData.Columns.Count - 1)
+                                    writer.Write(",");
+                            }
+                            writer.WriteLine();
+
+                            foreach (DataRow row in reportData.Rows)
+                            {
+                                for (int i = 0; i < reportData.Columns.Count; i++)
+                                {
+                                    writer.Write(row[i].ToString());
+                                    if (i < reportData.Columns.Count - 1)
+                                        writer.Write(",");
+                                }
+                                writer.WriteLine();
+                            }
+                        }
+                        MessageBox.Show("Export successful.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error during export: {ex.Message}", "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void BtnPreview_Click(object sender, EventArgs e)
+        {
+            if (reportData.Rows.Count == 0)
+            {
+                MessageBox.Show("No data available for preview.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            
+            DataTable dataToPreview = reportData.Clone(); 
+
+            foreach (DataRowView rowView in reportData.DefaultView)
+            {
+                dataToPreview.ImportRow(rowView.Row); 
+            }
+
+            if (dataToPreview.Rows.Count == 0)
+            {
+                MessageBox.Show("No data available for the report preview.", "Preview Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            Form reportPreviewForm = new Form();
+            reportPreviewForm.Text = "Report Preview";
+            reportPreviewForm.Size = new System.Drawing.Size(800, 600);
+            reportPreviewForm.StartPosition = FormStartPosition.CenterScreen;
+
+            ReportViewer previewViewer = new ReportViewer();
+            previewViewer.Dock = DockStyle.Fill;
+            previewViewer.LocalReport.ReportEmbeddedResource = "Ella_Rose_Assignment.VoidReport.rdlc"; 
+
+            previewViewer.LocalReport.DataSources.Clear();
+            previewViewer.LocalReport.DataSources.Add(new ReportDataSource("Dataset1", dataToPreview)); 
+            previewViewer.RefreshReport(); 
+            reportPreviewForm.Controls.Add(previewViewer);
+            reportPreviewForm.Show();
+        }
+
     }
 }
